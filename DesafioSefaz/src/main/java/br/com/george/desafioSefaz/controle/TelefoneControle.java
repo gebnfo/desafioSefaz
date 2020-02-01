@@ -14,7 +14,7 @@ private TelefoneDAO telefoneDAO = new TelefoneDAO();
 		return telefoneControle;
 	}
 	
-	public void salvar (Telefone telefone) {
+	public void salvarTelefone (Telefone telefone) {
 		telefoneDAO.salvar(telefone);
 	}
 	
@@ -24,6 +24,14 @@ private TelefoneDAO telefoneDAO = new TelefoneDAO();
 	
 	public List<Telefone> listarTelefonesPorUsuario (Usuario usuario){
 		return telefoneDAO.listarPorUsuario(usuario);
+	}
+	
+	public void alterarTelefone (Telefone telefone) {
+		telefoneDAO.alterar(telefone);
+	}
+	
+	public void excluirTelefone (Telefone telefone) {
+		telefoneDAO.excluir(telefone);
 	}
 
 }

@@ -21,6 +21,7 @@ public class ManterUsuarioMbean {
 	private Usuario usuarioSelecionado;
 	
 	private Telefone telefoneNovo;
+	private Telefone telefoneSelecionado;
 	
 	private UsuarioControle usuarioControle = UsuarioControle.getInstance();
 	private TelefoneControle telefoneControle = TelefoneControle.getInstance();
@@ -71,7 +72,7 @@ public class ManterUsuarioMbean {
 	public void salvarTelefone() {
 		try {
 			telefoneNovo.setUsuario(usuarioSelecionado);
-			telefoneControle.salvar(telefoneNovo);
+			telefoneControle.salvarTelefone(telefoneNovo);
 			telefoneNovo.getUsuario().getTelefones().add(telefoneNovo);
 		} catch (RuntimeException erro) {
 			erro.printStackTrace();
@@ -86,10 +87,31 @@ public class ManterUsuarioMbean {
 	
 	public void selecionarUsuarioExclusao (Usuario usuario) {
 		usuarioSelecionado = usuario;
-		if (!usuarioSelecionado.getTelefones().isEmpty())
+		if (!usuarioSelecionado.getTelefones().isEmpty() || usuarioSelecionado.getTelefones() == null)
 			mostrarMensagemExclusao = true;
 		else
 			mostrarMensagemExclusao = false;
+	}
+	
+	public void selecionarTelefone (Telefone telefone) {
+		telefoneSelecionado = telefone;
+	}
+	
+	public void alterarTelefone() {
+		try {
+			telefoneControle.alterarTelefone(telefoneSelecionado);
+		} catch (RuntimeException erro) {
+			erro.printStackTrace();
+		}
+	}
+	
+	public void excluirTelefone() {
+		try {
+			telefoneControle.excluirTelefone(telefoneSelecionado);
+			inicializar();
+		} catch (RuntimeException erro) {
+			erro.printStackTrace();
+		}
 	}
 	
 	public void limparCampos() {
@@ -145,8 +167,13 @@ public class ManterUsuarioMbean {
 	public void setMostrarMensagemExclusao(Boolean mostrarMensagemExclusao) {
 		this.mostrarMensagemExclusao = mostrarMensagemExclusao;
 	}
-	
-	
 
+	public Telefone getTelefoneSelecionado() {
+		return telefoneSelecionado;
+	}
+
+	public void setTelefoneSelecionado(Telefone telefoneSelecionado) {
+		this.telefoneSelecionado = telefoneSelecionado;
+	}
 	
 }
