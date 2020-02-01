@@ -1,0 +1,30 @@
+package br.com.george.desafioSefaz.controle;
+
+import java.util.List;
+
+import br.com.george.desafioSefaz.dao.TelefoneDAO;
+import br.com.george.desafioSefaz.mapeamento.Telefone;
+import br.com.george.desafioSefaz.mapeamento.Usuario;
+
+public class TelefoneControle {
+private TelefoneDAO telefoneDAO = new TelefoneDAO();
+	
+	public static TelefoneControle getInstance () {
+		TelefoneControle telefoneControle = new TelefoneControle();
+		return telefoneControle;
+	}
+	
+	public void salvar (Telefone telefone) {
+		telefoneDAO.salvar(telefone);
+	}
+	
+	public List<Telefone> listarTelefones (){
+		return telefoneDAO.listar();
+	}
+	
+	public List<Telefone> listarTelefonesPorUsuario (Usuario usuario){
+		return telefoneDAO.listarPorUsuario(usuario);
+	}
+
+}
+
