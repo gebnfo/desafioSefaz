@@ -11,6 +11,7 @@ import br.com.george.desafioSefaz.controle.UsuarioControle;
 import br.com.george.desafioSefaz.mapeamento.Telefone;
 import br.com.george.desafioSefaz.mapeamento.Usuario;
 import br.com.george.desafioSefaz.util.Constantes;
+import br.com.george.desafioSefaz.util.Util;
 
 @ManagedBean
 @ViewScoped
@@ -28,6 +29,7 @@ public class ManterUsuarioMbean {
 	
 	private String mensagemUsuarioComTelefones = Constantes.MENSAGEM_USUARIO_COM_TELEFONES;
 	private Boolean mostrarMensagemExclusao = false;
+	private Util util = new Util();
 
 	@PostConstruct
 	public void inicializar() {
@@ -38,24 +40,36 @@ public class ManterUsuarioMbean {
 				usuario.setTelefones(telefoneControle.listarTelefonesPorUsuario(usuario));
 			}
 		} catch (RuntimeException erro) {
+			util.getMenssagemErro();
 			erro.printStackTrace();
 		}
 
 	}
 
 	public void salvarUsuario() {
-		try {
+		try { 
+			if (usuarioControle.verificaSeExisteEmail(usuarioNovo.getEmail())) {
+				util.getMenssagemAlerta("Esse email já está vinculado a outro usuário!");
+			} else {
 			usuarioControle.salvar(usuarioNovo);
+			colecaoUsuario.add(usuarioNovo);
+			util.fecharDialogPF("dialogCadastrarUsuario");
+			util.getMenssagemInfor("Usuário adicionado com sucesso!");
+			}
 		} catch (RuntimeException erro) {
+			util.getMenssagemErro();
 			erro.printStackTrace();
 		}
-		colecaoUsuario.add(usuarioNovo);
+		
 	}
 	
 	public void alterarUsuario() {
 		try {
 			usuarioControle.alterarUsuario(usuarioSelecionado);
+			util.fecharDialogPF("dialogAlterarUsuario");
+			util.getMenssagemInfor("Usuário alterado com sucesso!");
 		} catch (RuntimeException erro) {
+			util.getMenssagemErro();
 			erro.printStackTrace();
 		}
 	}
@@ -64,7 +78,9 @@ public class ManterUsuarioMbean {
 		try {
 			usuarioControle.excluirUsuario(usuarioSelecionado);
 			colecaoUsuario.remove(usuarioSelecionado);
+			util.getMenssagemInfor("Usuário excluído com sucesso!");
 		} catch (RuntimeException erro) {
+			util.getMenssagemErro();
 			erro.printStackTrace();
 		}
 	}
@@ -74,7 +90,10 @@ public class ManterUsuarioMbean {
 			telefoneNovo.setUsuario(usuarioSelecionado);
 			telefoneControle.salvarTelefone(telefoneNovo);
 			telefoneNovo.getUsuario().getTelefones().add(telefoneNovo);
+			util.getMenssagemInfor("Telefone adicionado com sucesso!");
+			util.fecharDialogPF("dialogCadastrarTelefone");
 		} catch (RuntimeException erro) {
+			util.getMenssagemErro();
 			erro.printStackTrace();
 		}
 	}
@@ -100,7 +119,10 @@ public class ManterUsuarioMbean {
 	public void alterarTelefone() {
 		try {
 			telefoneControle.alterarTelefone(telefoneSelecionado);
+			util.fecharDialogPF("dialogAlterarTelefone");
+			util.getMenssagemInfor("Telefone alterado com sucesso!");
 		} catch (RuntimeException erro) {
+			util.getMenssagemErro();
 			erro.printStackTrace();
 		}
 	}
@@ -109,7 +131,9 @@ public class ManterUsuarioMbean {
 		try {
 			telefoneControle.excluirTelefone(telefoneSelecionado);
 			inicializar();
+			util.getMenssagemInfor("Telefone excluído com sucesso!");
 		} catch (RuntimeException erro) {
+			util.getMenssagemErro();
 			erro.printStackTrace();
 		}
 	}

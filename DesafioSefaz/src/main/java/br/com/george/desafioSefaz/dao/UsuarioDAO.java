@@ -90,5 +90,38 @@ public class UsuarioDAO {
 			sessao.close();
 		}
 	}
+	
+	public Boolean verificaSeExisteEmailCadastrado(String email) {
+		sessao = HibernateUtil.getFabricaDeSessoes().openSession();
+		Usuario usuario = new Usuario();
+		try {
+			Criteria criteria = sessao.createCriteria(Usuario.class);
+			usuario = (Usuario) criteria.add(Restrictions.eq("email", email)).uniqueResult();
+		} catch (RuntimeException erro) {
+			throw erro;
+		} finally {
+			sessao.close();
+		}
+		if (usuario != null)
+			return true;
+		else
+			return false;
+
+	}
+	
+	public Usuario autenticarUsuario (String email, String senha) {
+		sessao = HibernateUtil.getFabricaDeSessoes().openSession();
+		Usuario usuario = new Usuario();
+		try {
+			Criteria criteria = sessao.createCriteria(Usuario.class);
+			usuario = (Usuario) criteria.add(Restrictions.eq("email", email)).add(Restrictions.eq("senha", senha)).uniqueResult();
+		} catch (RuntimeException erro) {
+			throw erro;
+		} finally {
+			sessao.close();
+		}
+		return usuario;
+
+	}
 
 }

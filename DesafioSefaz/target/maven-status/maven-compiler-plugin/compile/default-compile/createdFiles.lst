@@ -1,0 +1,9 @@
+br\com\george\desafioSefaz\mapeamento\Telefone.class
+br\com\george\desafioSefaz\util\HibernateUtil.class
+br\com\george\desafioSefaz\controle\UsuarioControle.class
+br\com\george\desafioSefaz\dao\UsuarioDAO.class
+br\com\george\desafioSefaz\controle\TelefoneControle.class
+br\com\george\desafioSefaz\comunicacao\ManterUsuarioMbean.class
+br\com\george\desafioSefaz\dao\TelefoneDAO.class
+br\com\george\desafioSefaz\mapeamento\Usuario.class
+br\com\george\desafioSefaz\util\Constantes.class

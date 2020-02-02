@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<link href="../css/DesafioSefaz.css" rel="stylesheet" />
+	<title>Desafio Sefaz</title>
+</h:head>
+<h:body>
+
+	<h:form id="formListaUsuario">
+		<p:panel header="Lista de Usuários">
+
+			<p:dataTable sortBy="#{usuario.nome}" id="dataTableUsuarios"
+				emptyMessage="Ainda não foram cadastrados Usuários" var="usuario"
+				value="#{manterUsuarioMbean.colecaoUsuario}">
+				<f:facet name="header">
+					<p:commandButton value="Novo"
+						action="#{manterUsuarioMbean.limparCampos()}"
+						update=":formCadastrarUsuario"
+						oncomplete="PF('dialogCadastrarUsuario').show();" />
+				</f:facet>
+				<p:column headerText="Ações">
+
+
+					<p:commandButton value="Alterar" update="dialogAlterarUsuario"
+						action="#{manterUsuarioMbean.selecionarUsuario(usuario)}"
+						oncomplete="PF('dialogAlterarUsuario').show();" />
+
+					<p:commandButton value="Excluir"
+						oncomplete="PF('dialogExcluirUsuario').show();"
+						action="#{manterUsuarioMbean.selecionarUsuarioExclusao(usuario)}"
+						update="dialogExcluirUsuario" />
+
+				</p:column>
+
+				<p:column styleClass="tamanhoNome" headerText="Nome">
+					<h:outputText value="#{usuario.nome}" />
+				</p:column>
+
+				<p:column styleClass="tamanhoEmail" headerText="Email">
+					<h:outputText value="#{usuario.email}" />
+				</p:column>
+
+				<p:column styleClass="tamanhoSenha" headerText="Senha">
+					<h:outputText value="#{usuario.senha}" />
+				</p:column>
+
+				<p:column styleClass="tamanhoTelefone" headerText="Telefones">
+					<p:rowToggler />
+				</p:column>
+				<p:rowExpansion>
+					<p:dataTable style="width:50%" id="dataTableTelefone"
+						value="#{usuario.telefones}" var="telefone"
+						emptyMessage="Ainda não foram cadastrados telefones para esse usuário">
+						<f:facet name="header">
+							<p:outputLabel value="Telefones" />
+							<br />
+							<p:commandButton value="Adicionar Telefone"
+								action="#{manterUsuarioMbean.selecionarUsuario(usuario)}"
+								update=":formCadastrarTelefone"
+								oncomplete="PF('dialogCadastrarTelefone').show();" />
+						</f:facet>
+
+						<p:column styleClass="tamanhoDDD" headerText="DDD">
+							<h:outputText value="(#{telefone.ddd})" />
+						</p:column>
+
+						<p:column styleClass="tamanhoNumero" headerText="Número">
+							<h:outputText value="#{telefone.numero}" />
+						</p:column>
+
+						<p:column styleClass="tamanhoTipo" headerText="Tipo">
+							<h:outputText value="#{telefone.tipo}" />
+						</p:column>
+
+						<p:column headerText="Ações">
+
+							<p:commandButton value="Alterar"
+								action="#{manterUsuarioMbean.selecionarTelefone(telefone)}"
+								oncomplete="PF('dialogAlterarTelefone').show();"
+								update="dialogAlterarTelefone" />
+
+							<p:commandButton value="Excluir" action="#{manterUsuarioMbean.selecionarTelefone(telefone)}"
+								oncomplete="PF('dialogExcluirTelefone').show();"
+								update="dialogExcluirTelefone" />
+						</p:column>
+					</p:dataTable>
+				</p:rowExpansion>
+
+			</p:dataTable>
+		</p:panel>
+
+	</h:form>
+
+	<p:dialog header="Cadastrar Usuário" id="dialogCadastrarUsuario"
+		widgetVar="dialogCadastrarUsuario" draggable="false" resizable="false"
+		modal="true">
+		<h:form id="formCadastrarUsuario">
+			<p:panelGrid styleClass="semBorda" columns="2">
+				<p:outputLabel value="Nome:" />
+				<p:inputText size="48" maxlength="45"
+					value="#{manterUsuarioMbean.usuarioNovo.nome}" id="inputNome" />
+
+				<p:outputLabel value="Email:" />
+				<p:inputText size="48" maxlength="45"
+					value="#{manterUsuarioMbean.usuarioNovo.email}" id="inputEmail" />
+
+				<p:outputLabel value="Senha:" />
+				<p:inputText size="15" maxlength="14"
+					value="#{manterUsuarioMbean.usuarioNovo.senha}" id="inputSenha" />
+			</p:panelGrid>
+			<p:panelGrid styleClass="semBorda" columns="2">
+				<p:commandButton value="Salvar"
+					action="#{manterUsuarioMbean.salvarUsuario()}"
+					update="formListaUsuario:dataTableUsuarios, dialogCadastrarUsuario" />
+				<p:commandButton value="Fechar"
+					oncomplete="PF('dialogCadastrarUsuario').hide();" />
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+
+	<p:dialog header="Alterar Usuário" id="dialogAlterarUsuario"
+		widgetVar="dialogAlterarUsuario" draggable="false" resizable="false"
+		modal="true">
+		<h:form id="formAlterarUsuario">
+			<p:panelGrid styleClass="semBorda" columns="2">
+				<p:outputLabel value="Nome:" />
+				<p:inputText size="48" maxlength="45"
+					value="#{manterUsuarioMbean.usuarioSelecionado.nome}"
+					id="inputNome" />
+
+				<p:outputLabel value="Email:" />
+				<p:inputText size="48" maxlength="45"
+					value="#{manterUsuarioMbean.usuarioSelecionado.email}"
+					id="inputEmail" />
+
+				<p:outputLabel value="Senha:" />
+				<p:inputText size="15" maxlength="14"
+					value="#{manterUsuarioMbean.usuarioSelecionado.senha}"
+					id="inputSenha" />
+			</p:panelGrid>
+			<p:panelGrid styleClass="semBorda" columns="2">
+				<p:commandButton value="Salvar"
+					action="#{manterUsuarioMbean.alterarUsuario()}"
+					update="formListaUsuario:dataTableUsuarios, dialogAlterarUsuario" />
+				<p:commandButton value="Fechar"
+					oncomplete="PF('dialogAlterarUsuario').hide();" />
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+
+	<p:dialog header="Excluir Usuário" id="dialogExcluirUsuario"
+		widgetVar="dialogExcluirUsuario" draggable="false" resizable="false"
+		modal="true">
+		<h:form id="formExcluirUsuario">
+		<p:outputLabel value="Excluir o Usuário de nome #{manterUsuarioMbean.usuarioSelecionado.nome} ?" rendered="#{!manterUsuarioMbean.mostrarMensagemExclusao}" />
+			<p:outputLabel
+				value="#{manterUsuarioMbean.mensagemUsuarioComTelefones}"
+				style="color:orange"
+				rendered="#{manterUsuarioMbean.mostrarMensagemExclusao}" />
+			<p:panelGrid columns="2" styleClass="semBorda">
+				<p:commandButton value="Excluir"
+					disabled="#{manterUsuarioMbean.mostrarMensagemExclusao}"
+					action="#{manterUsuarioMbean.excluirUsuario()}"
+					update="formListaUsuario:dataTableUsuarios, dialogExcluirUsuario" />
+				<p:commandButton value="Fechar"
+					oncomplete="PF('dialogExcluirUsuario').hide();" />
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+
+	<p:dialog header="Cadastrar Telefone" id="dialogCadastrarTelefone"
+		widgetVar="dialogCadastrarTelefone" draggable="false"
+		resizable="false" modal="true">
+		<h:form id="formAlterarTelefone">
+			<p:panelGrid styleClass="semBorda" columns="2">
+				<p:outputLabel value="DDD:" />
+				<p:inputMask mask="99" size="2"
+					value="#{manterUsuarioMbean.telefoneNovo.ddd}" id="inputDDD" />
+			</p:panelGrid>
+
+			<p:panelGrid styleClass="semBorda" columns="4">
+				<p:outputLabel value="Tipo:" />
+				<p:selectOneRadio id="tipo"
+					value="#{manterUsuarioMbean.telefoneNovo.tipo}" unselectable="true">
+					<f:selectItem itemLabel="Celular" itemValue="Celular" />
+					<f:selectItem itemLabel="Comercial" itemValue="Comercial" />
+					<f:selectItem itemLabel="Residencial" itemValue="Residencial" />
+				</p:selectOneRadio>
+			</p:panelGrid>
+
+			<p:panelGrid styleClass="semBorda" columns="2">
+				<p:outputLabel value="Número:" />
+				<p:inputText size="14" maxlength="10" id="inputNumeroCelular"
+					value="#{manterUsuarioMbean.telefoneNovo.numero}" />
+			</p:panelGrid>
+
+			<p:panelGrid styleClass="semBorda" columns="2">
+				<p:commandButton value="Salvar"
+					action="#{manterUsuarioMbean.salvarTelefone()}"
+					update="formListaUsuario:dataTableUsuarios, dialogCadastrarTelefone" />
+				<p:commandButton value="Fechar"
+					oncomplete="PF('dialogCadastrarTelefone').hide();" />
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+
+	<p:dialog header="Alterar Telefone" id="dialogAlterarTelefone"
+		widgetVar="dialogAlterarTelefone" draggable="false" resizable="false"
+		modal="true">
+		<h:form id="formCadastrarTelefone">
+			<p:panelGrid styleClass="semBorda" columns="2">
+				<p:outputLabel value="DDD:" />
+				<p:inputMask mask="99" size="2"
+					value="#{manterUsuarioMbean.telefoneSelecionado.ddd}" id="inputDDD" />
+			</p:panelGrid>
+
+			<p:panelGrid styleClass="semBorda" columns="4">
+				<p:outputLabel value="Tipo:" />
+				<p:selectOneRadio id="tipo"
+					value="#{manterUsuarioMbean.telefoneSelecionado.tipo}"
+					unselectable="true">
+					<f:selectItem itemLabel="Celular" itemValue="Celular" />
+					<f:selectItem itemLabel="Comercial" itemValue="Comercial" />
+					<f:selectItem itemLabel="Residencial" itemValue="Residencial" />
+				</p:selectOneRadio>
+			</p:panelGrid>
+
+			<p:panelGrid styleClass="semBorda" columns="2">
+				<p:outputLabel value="Número:" />
+				<p:inputText size="14" maxlength="10" id="inputNumeroCelular"
+					value="#{manterUsuarioMbean.telefoneSelecionado.numero}" />
+			</p:panelGrid>
+
+			<p:panelGrid styleClass="semBorda" columns="2">
+				<p:commandButton value="Salvar"
+					action="#{manterUsuarioMbean.alterarTelefone()}"
+					update="formListaUsuario:dataTableUsuarios, dialogAlterarTelefone" />
+				<p:commandButton value="Fechar"
+					oncomplete="PF('dialogAlterarTelefone').hide();" />
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+
+	<p:dialog header="Excluir Telefone" id="dialogExcluirTelefone"
+		widgetVar="dialogExcluirTelefone" draggable="false" resizable="false"
+		modal="true">
+		<h:form id="formExcluirTelefone">
+			<p:outputLabel
+				value="Excluir o telefone de numero (#{manterUsuarioMbean.telefoneSelecionado.ddd}) #{manterUsuarioMbean.telefoneSelecionado.numero} ?" />
+			<p:panelGrid columns="2" styleClass="semBorda">
+				<p:commandButton value="Excluir"
+					action="#{manterUsuarioMbean.excluirTelefone()}"
+					update="formListaUsuario:dataTableUsuarios, dialogExcluirTelefone" />
+				<p:commandButton value="Fechar"
+					oncomplete="PF('dialogExcluirTelefone').hide();" />
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+
+</h:body>
+</html>

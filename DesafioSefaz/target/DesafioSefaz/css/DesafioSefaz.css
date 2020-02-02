@@ -1,0 +1,31 @@
+.semBorda tr, .semBorda td { 
+	border: none !important; 
+}
+
+.tamanhoNome {
+	width: 30%;
+}
+
+.tamanhoEmail {
+	width: 30%;
+}
+
+.tamanhoSenha {
+	width: 15%;
+}
+
+.tamanhoTelefone {
+	width: 8%;
+}
+
+.tamanhoDDD {
+	width: 14%;
+}
+
+.tamanhoNumero {
+	width: 20%;
+}
+
+.tamanhoTipo {
+	width: 30%;
+}
