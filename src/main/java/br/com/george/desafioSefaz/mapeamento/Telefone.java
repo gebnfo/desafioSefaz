@@ -14,7 +14,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="telefone")
-public class Telefone implements Serializable {
+public class Telefone implements Serializable, EntidadeBase {
 
 	private static final long serialVersionUID = 4034616182351293476L;
 
@@ -25,7 +25,7 @@ public class Telefone implements Serializable {
 	private String tipo;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_objeto")
 	public Integer getCodObjeto() {
 		return codObjeto;
@@ -43,14 +43,14 @@ public class Telefone implements Serializable {
 		this.usuario = usuario;
 	}
 	
-	@Column(name = "ddd")
+	@Column(name = "ddd", nullable = false)
 	public Integer getDdd() {
 		return ddd;
 	}
 	public void setDdd(Integer ddd) {
 		this.ddd = ddd;
 	}
-	@Column(name = "numero")
+	@Column(name = "numero", nullable = false)
 	public String getNumero() {
 		return numero;
 	}
@@ -58,7 +58,7 @@ public class Telefone implements Serializable {
 		this.numero = numero;
 	}
 	
-	@Column (name = "tipo")
+	@Column (name = "tipo", nullable = false)
 	public String getTipo() {
 		return tipo;
 	}

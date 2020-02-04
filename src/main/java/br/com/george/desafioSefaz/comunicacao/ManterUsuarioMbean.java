@@ -1,5 +1,6 @@
 package br.com.george.desafioSefaz.comunicacao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -89,6 +90,9 @@ public class ManterUsuarioMbean {
 		try {
 			telefoneNovo.setUsuario(usuarioSelecionado);
 			telefoneControle.salvarTelefone(telefoneNovo);
+			if (telefoneNovo.getUsuario().getTelefones() == null) {
+				telefoneNovo.getUsuario().setTelefones(new ArrayList<Telefone>());
+			}
 			telefoneNovo.getUsuario().getTelefones().add(telefoneNovo);
 			util.getMenssagemInfor("Telefone adicionado com sucesso!");
 			util.fecharDialogPF("dialogCadastrarTelefone");

@@ -3,108 +3,97 @@ package br.com.george.desafioSefaz.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
 import br.com.george.desafioSefaz.mapeamento.Telefone;
 import br.com.george.desafioSefaz.mapeamento.Usuario;
-import br.com.george.desafioSefaz.util.HibernateUtil;
 
-public class TelefoneDAO {
+public class TelefoneDAO extends GenericDAO {
 	
-	private Session sessao =  null;;
-	private Transaction transacao = null;
 	
 	public void salvar (Telefone telefone) {
-		sessao = HibernateUtil.getFabricaDeSessoes().openSession();
 		try {
-			transacao = sessao.beginTransaction();
-			sessao.save(telefone);
-			transacao.commit();
+			iniciarTransacao();
+			getManager().persist(telefone);
+			encerrarTransacao();
 		} catch (RuntimeException erro) {
-			if (transacao != null) 
-				transacao.rollback();
+			reverterTransacao();
 			throw erro;
 		} finally {
-			sessao.close();
+			fecharConexao();
 		}
 		
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Telefone> listar (){
-		sessao = HibernateUtil.getFabricaDeSessoes().openSession();
+	public List<Telefone> listar () throws RuntimeException {
 		List<Telefone> colecaoTelefone = new ArrayList<Telefone>(); 
 		try {
-			Criteria criteria = sessao.createCriteria(Telefone.class);
+			Criteria criteria = criarCriteria(Telefone.class);
 			colecaoTelefone =  criteria.list();
+			encerrarTransacao();
 		} catch (RuntimeException erro) {
 			throw erro;
 		} finally {
-			sessao.close();
-		} 
-		return colecaoTelefone;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<Telefone> listarPorUsuario (Usuario usuario){
-		sessao = HibernateUtil.getFabricaDeSessoes().openSession();
-		List<Telefone> colecaoTelefone = new ArrayList<Telefone>(); 
-		try {
-			Criteria criteria = sessao.createCriteria(Telefone.class);
-			colecaoTelefone =  criteria.add(Restrictions.eq("usuario", usuario)).list();
-		} catch (RuntimeException erro) {
-			throw erro;
-		} finally {
-			sessao.close();
+			fecharConexao();
 		} 
 		return colecaoTelefone;
 	}
 	
 	public Telefone buscar (Integer codObjeto) {
-		sessao = HibernateUtil.getFabricaDeSessoes().openSession();
 		Telefone telefone = new Telefone();
 		try {
-			Criteria criteria = sessao.createCriteria(Telefone.class);
+			Criteria criteria = criarCriteria(Telefone.class);
 			telefone = (Telefone) criteria.add(Restrictions.eq("codObjeto", codObjeto)).uniqueResult();
 		} catch (RuntimeException erro) {
 			throw erro;
 		} finally {
-			sessao.close();
+			fecharConexao();
 		}
 		return telefone;
 	}
 	
 	public void excluir (Telefone telefone) {
-		sessao = HibernateUtil.getFabricaDeSessoes().openSession();
 		try {
-			transacao = sessao.beginTransaction();
-			sessao.delete(telefone);
-			transacao.commit();
+			iniciarTransacao();
+			Query query = getManager().createNativeQuery("DELETE FROM Usuario WHERE cod_objeto = " + telefone.getCodObjeto());
+			query.executeUpdate();
+			encerrarTransacao();
 		} catch (RuntimeException erro) {
-			if (transacao != null) 
-				transacao.rollback();
+			reverterTransacao();
 			throw erro;
 		} finally {
-			sessao.close();
+			fecharConexao();
 		}
 	}
 	
 	public void alterar (Telefone telefone) {
-		sessao = HibernateUtil.getFabricaDeSessoes().openSession();
 		try {
-			transacao = sessao.beginTransaction();
-			sessao.update(telefone);
-			transacao.commit();
+			iniciarTransacao();
+			getManager().merge(telefone);
+			encerrarTransacao();
 		} catch (RuntimeException erro) {
-			if (transacao != null) 
-				transacao.rollback();
+			reverterTransacao();
 			throw erro;
 		} finally {
-			sessao.close();
+			fecharConexao();
 		}
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public List<Telefone> listarPorUsuario (Usuario usuario){
+		List<Telefone> colecaoTelefone = new ArrayList<Telefone>(); 
+		try {
+			Criteria criteria = criarCriteria(Telefone.class);
+			colecaoTelefone =  criteria.add(Restrictions.eq("usuario", usuario)).list();
+		} catch (RuntimeException erro) {
+			throw erro;
+		} finally {
+			fecharConexao();
+		} 
+		return colecaoTelefone;
+	}
 }

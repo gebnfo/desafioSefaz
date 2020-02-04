@@ -13,7 +13,7 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name="usuario")
-public class Usuario implements Serializable {
+public class Usuario implements Serializable, EntidadeBase {
 	
 	private static final long serialVersionUID = 2600412838223230511L;
 	
@@ -24,7 +24,7 @@ public class Usuario implements Serializable {
 	private List<Telefone> telefones;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_objeto")
 	public Integer getCodObjeto() {
 		return codObjeto;
@@ -33,7 +33,7 @@ public class Usuario implements Serializable {
 		this.codObjeto = codObjeto;
 	}
 	
-	@Column(name = "nome")
+	@Column(name = "nome", nullable = false)
 	public String getNome() {
 		return nome;
 	}
@@ -41,7 +41,7 @@ public class Usuario implements Serializable {
 		this.nome = nome;
 	}
 	
-	@Column(name = "senha")
+	@Column(name = "senha", nullable = false)
 	public String getSenha() {
 		return senha;
 	}
@@ -57,7 +57,7 @@ public class Usuario implements Serializable {
 		this.telefones = telefones;
 	}
 	
-	@Column(name = "email")
+	@Column(name = "email", nullable = false, unique = true)
 	public String getEmail() {
 		return email;
 	}

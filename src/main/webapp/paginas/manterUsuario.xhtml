@@ -14,6 +14,11 @@
 	<h:form id="form">
 		<p:growl id="caixaMensagem" autoUpdate="true" showSummary="false"
 			showDetail="true" sticky="true" />
+			
+			<h:outputLabel value="Olá #{loginMbean.retornaOPrimeroNome()}," style="color:#8abfff; margin-left:80%"></h:outputLabel>
+			<h:commandLink value="Sair" actionListener="#{loginMbean.deslogar()}" />
+		<br/>
+		<br/>	
 
 		<p:panel header="Lista de Usuários">
 
@@ -202,11 +207,14 @@
 				value="#{manterUsuarioMbean.mensagemUsuarioComTelefones}"
 				style="color:orange"
 				rendered="#{manterUsuarioMbean.mostrarMensagemExclusao}" />
+				<br/>
+				<br/>
 			<p:panelGrid columns="2" styleClass="semBorda">
 				<p:commandButton value="Excluir"
 					disabled="#{manterUsuarioMbean.mostrarMensagemExclusao}"
 					action="#{manterUsuarioMbean.excluirUsuario()}"
 					update=":form, dialogExcluirUsuario" />
+					
 				<p:commandButton value="Fechar"
 					oncomplete="PF('dialogExcluirUsuario').hide();" />
 			</p:panelGrid>

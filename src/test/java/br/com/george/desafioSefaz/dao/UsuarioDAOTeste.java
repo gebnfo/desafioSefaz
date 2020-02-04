@@ -9,13 +9,13 @@ import br.com.george.desafioSefaz.mapeamento.Usuario;
 
 public class UsuarioDAOTeste {
 	private UsuarioDAO usuarioDAO = new UsuarioDAO();
-	@Test
 	@Ignore
+	@Test
 	public void salvar () {
 		Usuario usuario = new Usuario();
 		usuario.setNome("George");
 		usuario.setSenha("teste2");
-		usuario.setEmail("teste@teste");
+		usuario.setEmail("teste");
 		UsuarioDAO usuarioDAO = new UsuarioDAO();
 		usuarioDAO.salvar(usuario);
 	}
@@ -43,10 +43,9 @@ public class UsuarioDAOTeste {
 		Usuario usuario = usuarioDAO.buscar(3);
 		usuarioDAO.excluir(usuario);
 	}
-	
 	@Test
 	public void alterar () {
-		Usuario usuario = usuarioDAO.buscar(3);
+		Usuario usuario = usuarioDAO.buscar(4);
 		usuario.setEmail("ge.georgesantos@hotmail.com");
 		usuarioDAO.alterar(usuario);
 	}

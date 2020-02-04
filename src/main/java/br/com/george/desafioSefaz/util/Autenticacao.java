@@ -17,7 +17,6 @@ public class Autenticacao implements PhaseListener {
 	public void afterPhase(PhaseEvent event) {
 
 		String paginaAtual = Faces.getViewId();
-
 		Boolean paginaPublica = paginaAtual.contains("telaInicial.xhtml");
 		if (!paginaPublica) {
 			

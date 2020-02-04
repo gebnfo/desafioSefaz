@@ -3,104 +3,93 @@ package br.com.george.desafioSefaz.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
 import br.com.george.desafioSefaz.mapeamento.Usuario;
-import br.com.george.desafioSefaz.util.HibernateUtil;
 
-public class UsuarioDAO {
+public class UsuarioDAO extends GenericDAO {
 	
-	private Session sessao =  null;;
-	private Transaction transacao = null;
 	
 	public void salvar (Usuario usuario) {
-		sessao = HibernateUtil.getFabricaDeSessoes().openSession();
 		try {
-			transacao = sessao.beginTransaction();
-			sessao.save(usuario);
-			transacao.commit();
+			iniciarTransacao();
+			getManager().persist(usuario);
+			encerrarTransacao();
 		} catch (RuntimeException erro) {
-			if (transacao != null) 
-				transacao.rollback();
+			reverterTransacao();
 			throw erro;
 		} finally {
-			sessao.close();
+			fecharConexao();
 		}
 		
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<Usuario> listar () throws RuntimeException {
-		sessao = HibernateUtil.getFabricaDeSessoes().openSession();
 		List<Usuario> colecaoUsuario = new ArrayList<Usuario>(); 
 		try {
-			Criteria criteria = sessao.createCriteria(Usuario.class);
+			Criteria criteria = criarCriteria(Usuario.class);
 			colecaoUsuario =  criteria.list();
 		} catch (RuntimeException erro) {
 			throw erro;
 		} finally {
-			sessao.close();
+			fecharConexao();
 		} 
 		return colecaoUsuario;
 	}
 	
 	public Usuario buscar (Integer codObjeto) {
-		sessao = HibernateUtil.getFabricaDeSessoes().openSession();
 		Usuario usuario = new Usuario();
 		try {
-			Criteria criteria = sessao.createCriteria(Usuario.class);
+			Criteria criteria = criarCriteria(Usuario.class);
 			usuario = (Usuario) criteria.add(Restrictions.eq("codObjeto", codObjeto)).uniqueResult();
 		} catch (RuntimeException erro) {
 			throw erro;
 		} finally {
-			sessao.close();
+			fecharConexao();
 		}
 		return usuario;
 	}
 	
 	public void excluir (Usuario usuario) {
-		sessao = HibernateUtil.getFabricaDeSessoes().openSession();
 		try {
-			transacao = sessao.beginTransaction();
-			sessao.delete(usuario);
-			transacao.commit();
+			iniciarTransacao();
+			Query query = getManager().createNativeQuery("DELETE FROM Usuario WHERE cod_objeto = " + usuario.getCodObjeto());
+			query.executeUpdate();
+			encerrarTransacao();
 		} catch (RuntimeException erro) {
-			if (transacao != null) 
-				transacao.rollback();
+			reverterTransacao();
 			throw erro;
 		} finally {
-			sessao.close();
+			fecharConexao();
 		}
 	}
 	
 	public void alterar (Usuario usuario) {
-		sessao = HibernateUtil.getFabricaDeSessoes().openSession();
 		try {
-			transacao = sessao.beginTransaction();
-			sessao.update(usuario);
-			transacao.commit();
+			iniciarTransacao();
+			getManager().merge(usuario);
+			encerrarTransacao();
 		} catch (RuntimeException erro) {
-			if (transacao != null) 
-				transacao.rollback();
+			reverterTransacao();
 			throw erro;
 		} finally {
-			sessao.close();
+			fecharConexao();
 		}
 	}
 	
 	public Boolean verificaSeExisteEmailCadastrado(String email) {
-		sessao = HibernateUtil.getFabricaDeSessoes().openSession();
 		Usuario usuario = new Usuario();
 		try {
-			Criteria criteria = sessao.createCriteria(Usuario.class);
+			Criteria criteria = criarCriteria(Usuario.class);
 			usuario = (Usuario) criteria.add(Restrictions.eq("email", email)).uniqueResult();
 		} catch (RuntimeException erro) {
 			throw erro;
 		} finally {
-			sessao.close();
+			fecharConexao();
 		}
 		if (usuario != null)
 			return true;
@@ -110,15 +99,14 @@ public class UsuarioDAO {
 	}
 	
 	public Usuario autenticarUsuario (String email, String senha) {
-		sessao = HibernateUtil.getFabricaDeSessoes().openSession();
 		Usuario usuario = new Usuario();
 		try {
-			Criteria criteria = sessao.createCriteria(Usuario.class);
+			Criteria criteria = criarCriteria(Usuario.class);
 			usuario = (Usuario) criteria.add(Restrictions.eq("email", email)).add(Restrictions.eq("senha", senha)).uniqueResult();
 		} catch (RuntimeException erro) {
 			throw erro;
 		} finally {
-			sessao.close();
+			fecharConexao();
 		}
 		return usuario;
 

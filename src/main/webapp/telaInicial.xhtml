@@ -6,7 +6,7 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
-	<link href="./css/DesafioSefaz.css" rel="stylesheet" />
+	<link href="/DesafioSefaz/css/DesafioSefaz.css" rel="stylesheet" />
 	<title>Desafio Sefaz</title>
 </h:head>
 <h:body>
@@ -20,11 +20,7 @@
 			<p:panelGrid columns="2" styleClass="semBorda">
 				<p:outputLabel value="Email:" />
 				<p:inputText required="true" maxlength="45" size="30"
-					validatorMessage="Digite um email valido!"
 					requiredMessage="Digite o email!" value="#{loginMbean.email}">
-					<f:validateRegex
-						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$">
-					</f:validateRegex>
 				</p:inputText>
 
 				<p:outputLabel value="Senha:" />
@@ -33,7 +29,7 @@
 				</p:password>
 			</p:panelGrid>
 			<p:panelGrid columns="1" styleClass="semBorda">
-				<p:commandButton value="Logar" action="#{loginMbean.logar()}" update="caixaMensagem"/>
+				<p:commandButton value="Logar" action="#{loginMbean.logar()}" ajax="false" update="caixaMensagem"/>
 			</p:panelGrid>
 
 		</p:dialog>
